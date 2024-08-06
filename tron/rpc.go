@@ -120,7 +120,7 @@ func (r *RpcClient) GetTransactionReceipt(hash string) (*TransactionReceipt, err
 // GetTRXBalance get trx balance
 func (r *RpcClient) GetTRXBalance(address string) (*big.Int, error) {
 	if strings.HasPrefix(address, "T") {
-		hex, err := tl.AddressB58ToHex(address)
+		hex, err := r.tl.AddressB58ToHex(address)
 		if err != nil {
 			panic(err)
 		}
@@ -144,7 +144,7 @@ func (r *RpcClient) GetTRXBalance(address string) (*big.Int, error) {
 // GetTrc20Balance get trc20 balance
 func (r *RpcClient) GetTrc20Balance(addr string, con string) (*big.Int, error) {
 	if strings.HasPrefix(con, "T") {
-		hex, err := tl.AddressB58ToHex(con)
+		hex, err := r.tl.AddressB58ToHex(con)
 		if err != nil {
 			panic(err)
 		}
@@ -171,14 +171,14 @@ func (r *RpcClient) GetTrc20Balance(addr string, con string) (*big.Int, error) {
 	if err = json.Unmarshal(call, &res); err != nil {
 		return nil, err
 	}
-	property := tl.parseErc20StringProperty(res.Result)
+	property := r.tl.parseErc20StringProperty(res.Result)
 	return big.NewInt(cast.ToInt64(property)), nil
 }
 
 // GetTokenName get token name
 func (r *RpcClient) GetTokenName(token string) (string, error) {
 	if strings.HasPrefix(token, "T") {
-		hex, err := tl.AddressB58ToHex(token)
+		hex, err := r.tl.AddressB58ToHex(token)
 		if err != nil {
 			panic(err)
 		}
@@ -201,14 +201,14 @@ func (r *RpcClient) GetTokenName(token string) (string, error) {
 		return "", err
 	}
 
-	property := tl.parseErc20StringProperty(Res.Result)
+	property := r.tl.parseErc20StringProperty(Res.Result)
 	return property, nil
 }
 
 // GetSymbol get symbol
 func (r *RpcClient) GetSymbol(token string) (string, error) {
 	if strings.HasPrefix(token, "T") {
-		hex, err := tl.AddressB58ToHex(token)
+		hex, err := r.tl.AddressB58ToHex(token)
 		if err != nil {
 			panic(err)
 		}
@@ -230,14 +230,14 @@ func (r *RpcClient) GetSymbol(token string) (string, error) {
 	if err = json.Unmarshal(call, &res); err != nil {
 		return "", err
 	}
-	property := tl.parseErc20StringProperty(res.Result)
+	property := r.tl.parseErc20StringProperty(res.Result)
 	return property, nil
 }
 
 // GetDecimal get decimal
 func (r *RpcClient) GetDecimal(token string) (string, error) {
 	if strings.HasPrefix(token, "T") {
-		hex, err := tl.AddressB58ToHex(token)
+		hex, err := r.tl.AddressB58ToHex(token)
 		if err != nil {
 			panic(err)
 		}
@@ -260,7 +260,7 @@ func (r *RpcClient) GetDecimal(token string) (string, error) {
 		return "", err
 	}
 
-	property := tl.parseErc20StringProperty(res.Result)
+	property := r.tl.parseErc20StringProperty(res.Result)
 	return property, nil
 }
 
@@ -285,14 +285,13 @@ func (r *RpcClient) EstimateGas(m map[string]string) (*big.Int, error) {
 type RpcClient struct {
 	client  *http.Client
 	network string
+	tl      *TrTool
 }
 
 var co = int32(0)
-var tl *TrTool
 
 func init() {
 	atomic.StoreInt32(&co, 0)
-	tl = NewTronTool()
 }
 
 func (err *EthereumError) Error() string {

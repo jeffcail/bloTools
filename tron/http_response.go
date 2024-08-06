@@ -27,3 +27,21 @@ type Transaction struct {
 	Type           string `json:"type"`
 	Value          string `json:"value"`
 }
+
+type GetTrc10TokenPrecision struct {
+	AssetIssue []*AssetIssue `json:"assetIssue"`
+}
+type AssetIssue struct {
+	OwnerAddress string `json:"owner_address"`
+	Name         string `json:"name"`
+	Abbr         string `json:"abbr"`
+	TotalSupply  int    `json:"total_supply"`
+	TrxNum       int    `json:"trx_num"`
+	Precision    int    `json:"precision"`
+	Num          int    `json:"num"`
+	StartTime    int64  `json:"start_time"`
+	EndTime      int64  `json:"end_time"`
+	Description  string `json:"description"`
+	Url          string `json:"url"`
+	Id           string `json:"id"`
+}

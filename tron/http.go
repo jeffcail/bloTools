@@ -11,8 +11,24 @@ type (
 	HttpClientInterface interface {
 		GetLatestSignalTransaction(address, symbolAddress string) (*TransactionRes, error)
 		GetTransactions(address, symbolAddress string) (*TransactionRes, error)
+		GetTrc10TokenPrecision(url string) (*GetTrc10TokenPrecision, error)
 	}
 )
+
+func (h *HttpClient) GetTrc10TokenPrecision(url string) (*GetTrc10TokenPrecision, error) {
+	header := make(map[string]string)
+	header["accept"] = "application/json"
+	res, err := gorequest.Get(url, header, nil)
+	if err != nil {
+		return nil, err
+	}
+	var data = new(GetTrc10TokenPrecision)
+	err = json.Unmarshal(res, data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
 
 type HttpClient struct {
 	c   *http.Client
