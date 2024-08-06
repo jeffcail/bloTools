@@ -12,6 +12,10 @@ import (
 	"github.com/golang/protobuf/proto"
 	bloTools "github.com/jeffcail/blcTools"
 	"github.com/jinzhu/copier"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	"net"
+	"time"
 )
 
 type GrpcServerInterface interface {
@@ -33,8 +37,12 @@ func NewGrpcClient(network string) (*GrpcServerClient, error) {
 		network: network,
 	}
 
+	dailFunc := func(addr string, d time.Duration) (conn net.Conn, err error) {
+		return net.DialTimeout("tcp", addr, d)
+	}
+
 	c := client.NewGrpcClient(network)
-	if err := c.Start(); err != nil {
+	if err := c.Start(grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithDialer(dailFunc)); err != nil {
 		return nil, err
 	}
 
