@@ -20,7 +20,7 @@ func TestNewHttpClient(t *testing.T) {
 }
 
 func TestHttpClient_GetTrc10TokenPrecision(t *testing.T) {
-	url := fmt.Sprintf("%s%s", "https://go.getblock.io/7786a01a5e52406f8c23a7fa67eea834/", "wallet/getassetissuelist")
+	url := fmt.Sprintf("%s%s", "", "wallet/getassetissuelist")
 
 	precision, err := NewHttpClient("").GetTrc10TokenPrecision(url)
 	if err != nil {
