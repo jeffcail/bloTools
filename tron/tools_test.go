@@ -10,6 +10,7 @@ func TestTool(t *testing.T) {
 		"AddressHexToB58":     {TestTrTool_AddressHexToB58},
 		"ValidateTronAddress": {TestTrTool_ValidateTronAddress},
 		"AccuracyPrivateKey":  {TestTrTool_AccuracyPrivateKey},
+		"ParseInputData":      {TestTrTool_ParseInputData},
 	}
 
 	t.Parallel()
@@ -56,4 +57,13 @@ func TestTrTool_AccuracyPrivateKey(t *testing.T) {
 	}
 
 	t.Log("private key is valid!")
+}
+
+func TestTrTool_ParseInputData(t *testing.T) {
+	var input = "0xa9059cbb00000000000000000000000082a89268afbc38ddd327d369866706bcc309808700000000000000000000000000000000000000000000000000000000000003e8"
+	to, amount := tl.ParseInputData(input)
+	b58 := tl.AddressHexToB58(to)
+	t.Logf("to: %s", to)
+	t.Logf("tob58: %s", b58)
+	t.Logf("amount: %s", amount)
 }

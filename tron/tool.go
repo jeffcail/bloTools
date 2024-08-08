@@ -133,3 +133,29 @@ func (t *TrTool) parseErc20NumericProperty(data string) *big.Int {
 	}
 	return nil
 }
+
+func (t *TrTool) ParseTokenAbbrAndName(s string) string {
+	ds, err := hex.DecodeString(s)
+	if err != nil {
+		panic(err)
+	}
+	return string(ds)
+}
+
+// ParseInputData
+// 对于每笔交易，根据交易的输入数据（input 字段）解析出相应的 Token 信息。如果交易调用了智能合约，input 字段将包含方法签名和参数。
+// TRC-20 代币的 transfer 方法通常以 0xa9059cbb 开头，其后是接收地址和转账金额。
+func (t *TrTool) ParseInputData(input string) (to, amount string) {
+	if len(input) == 0 && len(input) <= 10 {
+		return
+	}
+	has := strings.HasPrefix(input, "0xa9059cbb")
+	if has {
+		// 解析 Token 转账的接收者地址和金额
+		to = "0x" + input[34:74]
+		amountBigInt := new(big.Int)
+		amountBigInt.SetString(input[74:], 16)
+		amount = amountBigInt.String()
+	}
+	return to, amount
+}
